@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel · Barreto Clássica</title>
+<meta name="theme-color" content="#0b1428">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1428;--bg2:#101c38;--card:rgba(255,255,255,.035);--ink:#f3efe6;--mute:#a7adbd;--gold:#d6b67a;--gold2:#f1d9a6;--line:rgba(214,182,122,.2);--ok:#4ade80;--warn:#fbbf24;--bad:#f87171}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:84px}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+.serif{font-family:Fraunces,Georgia,serif;font-weight:400;letter-spacing:-.02em}
+header{position:sticky;top:0;z-index:10;background:rgba(11,20,40,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar{max-width:1100px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;gap:10px;align-items:center}
+.mono{width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-family:Fraunces,serif;color:var(--gold2)}
+.logo small{display:block;font-size:.66rem;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{border:0;background:none;padding:8px 16px;border-radius:999px;cursor:pointer;color:var(--mute);font-weight:600;font-size:.88rem;transition:background .3s,color .3s}
+.tabs button.on{background:var(--gold);color:#1a1408}
+main{max-width:1100px;margin:auto;padding:20px 16px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.kpi span{font-size:.78rem;color:var(--mute)}
+.kpi b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:1.9rem;color:var(--gold2);line-height:1.15}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+h2{font-size:1.6rem}
+.days{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:16px}
+.day{flex:0 0 62px;text-align:center;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:8px 4px;cursor:pointer;position:relative;transition:border-color .2s}
+.day small{display:block;font-size:.7rem;color:var(--mute);text-transform:capitalize}
+.day b{font-family:Fraunces,serif;font-weight:400;font-size:1.3rem}
+.day.on{background:var(--gold);border-color:var(--gold);color:#1a1408}
+.day.on small{color:#1a1408}
+.day i{position:absolute;top:6px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.day.on i{background:#1a1408}
+.slots{display:grid;gap:8px}
+.slot{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;transition:transform .2s,border-color .3s}
+.slot.free{background:none;border-style:dashed;opacity:.65}
+.slot.blocked{opacity:.45}
+.slot .t{font-family:Fraunces,serif;font-size:1.2rem;color:var(--gold2)}
+.slot .who b{display:block}
+.slot .who small{color:var(--mute);font-size:.82rem}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.b{border:1px solid var(--line);background:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s}
+.b:hover{border-color:var(--gold)}
+.b.gold{background:var(--gold);color:#1a1408;border-color:var(--gold);font-weight:600}
+.b.wa{background:#25d366;border-color:#25d366;color:#05290f;font-weight:600}
+.pill{font-size:.7rem;padding:3px 9px;border-radius:999px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.p-pending{background:rgba(251,191,36,.15);color:var(--warn)}
+.p-confirmed{background:rgba(74,222,128,.13);color:var(--ok)}
+.p-done{background:rgba(214,182,122,.15);color:var(--gold2)}
+.p-canceled{background:rgba(248,113,113,.13);color:var(--bad)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:.9rem}
+th{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+tr:last-child td{border-bottom:0}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;cursor:pointer}
+.qty b{min-width:28px;text-align:center}
+.low td:first-child::after{content:"repor";margin-left:8px;font-size:.66rem;padding:2px 7px;border-radius:999px;background:rgba(248,113,113,.15);color:var(--bad);font-weight:700;text-transform:uppercase}
+form.add{display:flex;gap:8px;flex-wrap:wrap;padding:14px;border-top:1px solid var(--line)}
+form.add input{flex:1 1 140px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none}
+form.add input:focus{border-color:var(--gold)}
+.chart{display:flex;align-items:flex-end;gap:8px;height:180px;padding:18px 16px 8px}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.chart i{width:100%;max-width:46px;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--gold2),var(--gold));transition:height .8s cubic-bezier(.2,.8,.2,1)}
+.chart small{font-size:.72rem;color:var(--mute)}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.list li{list-style:none;display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);font-size:.9rem}
+.list li:last-child{border:0}
+.empty{padding:30px;text-align:center;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.88rem;transition:all .35s;pointer-events:none;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.demo{font-size:.78rem;color:var(--mute);text-align:center;margin-top:26px}
+.demo a{color:var(--gold);cursor:pointer}
+@media (max-width:760px){
+  .bar .tabs{position:fixed;left:12px;right:12px;bottom:12px;justify-content:space-around;background:rgba(16,28,56,.95);backdrop-filter:blur(12px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .tabs button{flex:1;padding:10px 6px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .slot{grid-template-columns:52px 1fr}
+  .slot .acts{grid-column:1/-1;justify-content:flex-start}
+  .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="index.html"><span class="mono">RB</span><span><b>Painel</b><small>Barbearia Barreto Clássica</small></span></a>
+  <nav class="tabs" id="tabs"><button data-t="agenda" class="on">Agenda</button><button data-t="estoque">Estoque</button><button data-t="caixa">Caixa</button><button data-t="clientes">Clientes</button></nav>
+</div></header>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<script src="store.js"></script>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),app=$('#app');let tab='agenda',day=RB.iso(new Date());
+const money=v=>'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:2});
+const fmtD=d=>new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700)};
+const LABEL={pending:'pendente',confirmed:'confirmado',done:'concluído',canceled:'cancelado'};
+const wa=(ph,msg)=>`https://wa.me/55${ph}?text=${encodeURIComponent(msg)}`;
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo({top:0})});
+addEventListener('rb:change',render);
+
+function kpis(){const db=RB.db,t=RB.iso(new Date()),wk=RB.addDays(-6);
+  const today=db.bookings.filter(b=>b.date===t&&b.status!=='canceled');
+  const week=db.bookings.filter(b=>b.date>=wk&&b.date<=t&&b.status==='done');
+  const pend=db.bookings.filter(b=>b.status==='pending').length;
+  const low=db.stock.filter(s=>s.qty<=s.min).length;
+  return`<div class="kpis"><div class="kpi"><span>Hoje</span><b>${today.length}</b><span>atendimentos</span></div><div class="kpi"><span>Faturado 7 dias</span><b>${money(week.reduce((a,b)=>a+b.price,0))}</b><span>${week.length} serviços</span></div><div class="kpi"><span>A confirmar</span><b>${pend}</b><span>pedidos do site</span></div><div class="kpi"><span>Estoque</span><b>${low}</b><span>itens pra repor</span></div></div>`}
+
+function agenda(){const db=RB.db;
+  const days=[...Array(14)].map((_,i)=>RB.addDays(i-2));
+  const has=new Set(db.bookings.filter(b=>b.status!=='canceled').map(b=>b.date));
+  const rows=RB.HOURS.map(h=>{const b=db.bookings.find(x=>x.date===day&&x.time===h&&x.status!=='canceled');const bl=db.blocked.find(x=>x.date===day&&x.time===h);
+    if(b){const s=RB.service(b.service);return`<div class="slot"><span class="t">${h}</span><div class="who"><b>${b.name} <span class="pill p-${b.status}">${LABEL[b.status]}</span></b><small>${s.name} · ${money(b.price)} · ${b.address||''}</small></div><div class="acts">
+      ${b.status==='pending'?`<button class="b gold" data-a="confirm" data-id="${b.id}">Confirmar</button>`:''}
+      ${b.status!=='done'?`<button class="b" data-a="done" data-id="${b.id}">Concluir</button>`:''}
+      <a class="b wa" target="_blank" rel="noopener" href="${wa(b.phone,`Olá ${b.name.split(' ')[0]}! Aqui é o Rafael. Confirmando seu ${s.name.toLowerCase()} ${fmtD(b.date)} às ${b.time}. Até lá!`)}">WhatsApp</a>
+      ${b.status!=='done'?`<button class="b" data-a="cancel" data-id="${b.id}">Cancelar</button>`:''}</div></div>`}
+    if(bl)return`<div class="slot blocked"><span class="t">${h}</span><div class="who"><b>Bloqueado</b><small>${bl.note||'pausa'}</small></div><div class="acts"><button class="b" data-a="unblock" data-h="${h}">Liberar</button></div></div>`;
+    return`<div class="slot free"><span class="t">${h}</span><div class="who"><small>Livre</small></div><div class="acts"><button class="b" data-a="block" data-h="${h}">Bloquear</button><button class="b" data-a="new" data-h="${h}">+ Encaixe</button></div></div>`}).join('');
+  return kpis()+`<div class="row"><h2 class="serif">${fmtD(day)}</h2><button class="b" id="share">Copiar link de agendamento</button></div>
+  <div class="days">${days.map(d=>{const x=new Date(d+'T12:00');return`<button class="day ${d===day?'on':''}" data-d="${d}">${has.has(d)?'<i></i>':''}<small>${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}</small><b>${x.getDate()}</b></button>`}).join('')}</div>
+  <div class="slots">${rows}</div>`}
+
+function estoque(){const db=RB.db,val=db.stock.reduce((a,s)=>a+s.qty*s.cost,0);
+  return`<div class="row"><h2 class="serif">Estoque</h2><span style="color:var(--mute);font-size:.88rem">Valor parado: <b style="color:var(--gold2)">${money(val)}</b></span></div>
+  <div class="card"><table><thead><tr><th>Produto</th><th>Qtd</th><th class="hide-m">Mínimo</th><th class="hide-m">Custo</th><th></th></tr></thead><tbody>
+  ${db.stock.map(s=>`<tr class="${s.qty<=s.min?'low':''}"><td>${s.name}</td><td><span class="qty"><button data-q="-1" data-id="${s.id}">−</button><b>${s.qty}</b><button data-q="1" data-id="${s.id}">+</button></span></td><td class="hide-m">${s.min} ${s.unit}</td><td class="hide-m">${money(s.cost)}</td><td><button class="b" data-del="${s.id}">✕</button></td></tr>`).join('')}
+  </tbody></table><form class="add" id="addStock"><input name="n" placeholder="Novo produto" required><input name="q" type="number" min="0" placeholder="Qtd" required style="flex:0 1 90px"><input name="m" type="number" min="0" placeholder="Mínimo" style="flex:0 1 90px"><input name="c" type="number" min="0" step="0.01" placeholder="Custo R$" style="flex:0 1 110px"><button class="b gold">Adicionar</button></form></div>
+  ${db.stock.some(s=>s.qty<=s.min)?`<div class="row" style="margin-top:14px"><span style="color:var(--mute)">Lista de compras pronta:</span><button class="b gold" id="shop">Copiar lista de reposição</button></div>`:''}`}
+
+function caixa(){const db=RB.db,t=RB.iso(new Date());
+  const days=[...Array(7)].map((_,i)=>RB.addDays(i-6));
+  const vals=days.map(d=>db.bookings.filter(b=>b.date===d&&b.status==='done').reduce((a,b)=>a+b.price,0));const max=Math.max(...vals,1);
+  const done=db.bookings.filter(b=>b.status==='done');
+  const by={};done.forEach(b=>{by[b.service]=(by[b.service]||0)+b.price});
+  const fut=db.bookings.filter(b=>b.date>t&&['pending','confirmed'].includes(b.status)).reduce((a,b)=>a+b.price,0);
+  return kpis()+`<div class="grid2"><div class="card"><div class="row" style="padding:16px 16px 0;margin:0"><h2 class="serif" style="font-size:1.25rem">Últimos 7 dias</h2><b style="color:var(--gold2)">${money(vals.reduce((a,b)=>a+b,0))}</b></div>
+  <div class="chart">${days.map((d,i)=>`<div><small>${vals[i]?money(vals[i]):''}</small><i style="height:${Math.max(4,vals[i]/max*100)}%"></i><small>${new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}</small></div>`).join('')}</div></div>
+  <div class="card"><div style="padding:16px 16px 6px"><h2 class="serif" style="font-size:1.25rem">Por serviço</h2></div><ul class="list">${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<li><span>${RB.service(k).name}</span><b>${money(v)}</b></li>`).join('')||'<li class="empty">Sem dados</li>'}<li><span style="color:var(--mute)">Previsto (agendados)</span><b style="color:var(--ok)">${money(fut)}</b></li></ul></div></div>`}
+
+function clientes(){const db=RB.db,m={};
+  db.bookings.filter(b=>b.status!=='canceled').forEach(b=>{const c=m[b.phone]||(m[b.phone]={name:b.name,phone:b.phone,n:0,total:0,last:''});c.n++;if(b.status==='done')c.total+=b.price;if(b.date>c.last)c.last=b.date});
+  const list=Object.values(m).sort((a,b)=>b.total-a.total);const lim=RB.addDays(-30);
+  return`<div class="row"><h2 class="serif">Clientes</h2><span style="color:var(--mute);font-size:.88rem">${list.length} clientes</span></div>
+  <div class="card"><table><thead><tr><th>Cliente</th><th class="hide-m">Visitas</th><th>Gasto</th><th class="hide-m">Última</th><th></th></tr></thead><tbody>
+  ${list.map(c=>`<tr><td>${c.name}</td><td class="hide-m">${c.n}</td><td>${money(c.total)}</td><td class="hide-m">${new Date(c.last+'T12:00').toLocaleDateString('pt-BR')}</td><td><a class="b wa" target="_blank" rel="noopener" href="${wa(c.phone,`Fala ${c.name.split(' ')[0]}! Aqui é o Rafael. ${c.last<lim?'Faz um tempinho que a gente não se vê, bora marcar o corte?':'Tudo certo? Quando quiser o próximo horário é só chamar.'}`)}">${c.last<lim?'Chamar de volta':'WhatsApp'}</a></td></tr>`).join('')}
+  </tbody></table></div>`}
+
+function render(){app.innerHTML=({agenda,estoque,caixa,clientes})[tab]()+`<p class="demo">Versão demonstração · dados salvos neste navegador · <a id="reset">restaurar exemplo</a></p>`;bind()}
+function bind(){
+  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{day=b.dataset.d;render()});
+  app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a,id=+b.dataset.id,h=b.dataset.h;
+    if(a==='confirm'||a==='done'||a==='cancel'){if(a==='cancel'&&!confirm('Cancelar esse horário?'))return;RB.commit(db=>{db.bookings.find(x=>x.id===id).status=a==='confirm'?'confirmed':a==='done'?'done':'canceled'});toast(a==='done'?'Atendimento concluído ✓':a==='confirm'?'Confirmado ✓':'Cancelado')}
+    if(a==='block'){const note=prompt('Motivo (opcional)','Almoço')??null;if(note===null)return;RB.commit(db=>db.blocked.push({date:day,time:h,note}));toast('Horário bloqueado')}
+    if(a==='unblock')RB.commit(db=>{db.blocked=db.blocked.filter(x=>!(x.date===day&&x.time===h))});
+    if(a==='new'){const name=prompt('Nome do cliente');if(!name)return;const phone=(prompt('WhatsApp (só números)')||'').replace(/\D/g,'');const svc=prompt('Serviço: '+RB.SERVICES.map(s=>s.id).join(', '),'corte');const s=RB.service(svc)||RB.SERVICES[0];RB.commit(db=>db.bookings.push({id:Date.now(),date:day,time:h,service:s.id,name,phone,address:'',status:'confirmed',price:s.price,createdAt:Date.now()}));toast('Encaixe adicionado ✓')}});
+  app.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>RB.commit(db=>{const s=db.stock.find(x=>x.id===+b.dataset.id);s.qty=Math.max(0,s.qty+ +b.dataset.q)}));
+  app.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Remover produto?'))RB.commit(db=>{db.stock=db.stock.filter(x=>x.id!==+b.dataset.del)})});
+  const f=$('#addStock');if(f)f.onsubmit=e=>{e.preventDefault();const d=new FormData(f);RB.commit(db=>db.stock.push({id:Date.now(),name:d.get('n'),qty:+d.get('q'),min:+d.get('m')||0,unit:'un',cost:+d.get('c')||0}));toast('Produto adicionado ✓')};
+  const sh=$('#shop');if(sh)sh.onclick=()=>{const t='Reposição:\n'+RB.db.stock.filter(s=>s.qty<=s.min).map(s=>`- ${s.name}: ${Math.max(s.min*2-s.qty,1)} ${s.unit}`).join('\n');navigator.clipboard?.writeText(t);toast('Lista copiada ✓')};
+  const sl=$('#share');if(sl)sl.onclick=()=>{navigator.clipboard?.writeText(location.href.replace(/admin\.html.*/,'')+'#agendar');toast('Link copiado ✓')};
+  $('#reset').onclick=()=>{if(confirm('Restaurar dados de exemplo?'))RB.reset()};
+}
+render();
+})();
+</script>
+</body>
+</html>
